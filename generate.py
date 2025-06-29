@@ -1,9 +1,6 @@
-from string import Template
-
 """
 Generate answers with local and API models.
 """
-from email import message
 
 from transformers import pipeline
 import torch
