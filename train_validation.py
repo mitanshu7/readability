@@ -2,67 +2,40 @@
 Train Models to classify reading level of a text
 """
 
-from glob import glob  # Gather files
+from pickle import dump  # Save models
 
-import pandas as pd  # For data maipulation
-
-# Gather files from the dataset
-OneStopEnglish = glob("datasets/OneStopEnglish/**/*.txt")
-print(f"Gathered {len(OneStopEnglish)} files")
-
-
-# Function to extract Level of text
-def extract_level(row: pd.DataFrame) -> str:
-    # Get foldername for the level
-    foldername = row["filename"].split("/")[-2]
-
-    # Get level name from folder, e.g. Adv, Ele, or Int.
-    level = foldername.split("-")[0]
-
-    return level
-
-
-# Function to extract text from files
-def extract_text(row: pd.DataFrame) -> str:
-    # Read contents from file name
-    filename = row["filename"]
-    with open(filename, "r") as f:
-        text = f.read()
-
-    # Remove the first line, since it only contains the level of the text
-    text = text.split("\n", 1)[1]
-
-    return text
-
-
-# Function to extract paragraphs from text
-def extract_paragraph(text: str) -> list[str]:
-    # Split text into paragraphs
-    paragraphs = text.split("\n")
-
-    # Remove empty paragraphs
-    paragraphs = [p for p in paragraphs if p.strip()]
-
-    return paragraphs
-
-
-# Generate a pandas dataframe for classification
-df = pd.DataFrame({"filename": OneStopEnglish})
-
-# Extract level
-df["level"] = df.apply(extract_level, axis=1)
-
-# Extract the text from the file
-df["text"] = df.apply(extract_text, axis=1)
-
-df.to_csv("datasets/OneStopEnglish/all.csv", index=False)
-
-# Extract paragraph from text
-df["paragraph"] = df["text"].apply(extract_paragraph)
-
-# Create multiple rows from one
-df = df.explode("paragraph")
-
-df[["filename", "level", "paragraph"]].to_csv(
-    "datasets/OneStopEnglish/all_paragraphs.csv", index=False
+import pandas as pd  # For data manipulation
+from sklearn.model_selection import (
+    train_test_split,  # Split data into train and test sets
 )
+from sklearn.svm import SVC  # Classification model
+
+df = pd.read_parquet("datasets/OneStopEnglish/OneStopEnglish.parquet")
+
+# Split data into train and test sets
+train_df, test_df = train_test_split(df, test_size=0.2, random_state=42)
+
+# Train SVM
+text_svm = SVC()
+text_svm.fit(train_df["text_embedding"].tolist(), train_df["level"])
+
+# Find accuracy
+text_svm_accuracy = text_svm.score(test_df["text_embedding"].tolist(), test_df["level"])
+print(f"Text SVM Accuracy: {text_svm_accuracy}")
+
+# Train SVM for paragraphs
+paragraph_svm = SVC()
+paragraph_svm.fit(train_df["paragraph_embedding"].tolist(), train_df["level"])
+
+# Find accuracy
+paragraph_svm_accuracy = paragraph_svm.score(
+    test_df["paragraph_embedding"].tolist(), test_df["level"]
+)
+print(f"Paragraph SVM Accuracy: {paragraph_svm_accuracy}")
+
+# Save the svm models using pickle
+with open("models/OneStopEnglist/text_svm_model.pkl", "wb") as f:
+    dump(text_svm, f)
+
+with open("models/OneStopEnglist/paragraph_svm_model.pkl", "wb") as f:
+    dump(paragraph_svm, f)
