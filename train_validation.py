@@ -63,7 +63,7 @@ readability_svm_accuracy = readability_svm.score(
 print(f"Readability SVM Accuracy: {readability_svm_accuracy}")
 
 # Save the svm models using pickle
-with open("models/OneStopEnglish/readability_svm_model.pkl", "wb") as f:
+with open("models/OneStopEnglish/text_readability_svm_model.pkl", "wb") as f:
     dump(readability_svm, f)
 
 ################################################################################

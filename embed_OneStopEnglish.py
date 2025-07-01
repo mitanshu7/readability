@@ -1,5 +1,5 @@
 """
-Train Models to classify reading level of a text
+Embed Text from OneStopEnglish dataset to classify reading level of a text
 """
 
 from glob import glob  # Gather files
