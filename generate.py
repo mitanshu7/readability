@@ -11,8 +11,7 @@ from transformers import pipeline
 
 def run_inference_local(
     model_name: str,
-    query: str,
-    template: str = "",
+    messages: list[dict],
     max_new_tokens: int = 200,
     temperature: float = 0.1,
 ) -> str:
@@ -21,8 +20,7 @@ def run_inference_local(
 
     Parameters:
     model_name (str): Name of the model to use
-    query (str): Input text for the model
-    template (str): System prompt
+    messages (list[dict]): List of messages to generate text from
     max_new_tokens (int): Maximum length of the generated text (default: 100)
     temperature (float): Creativity of LLM from 0.0-1.0. Higher is less accurate.
 
@@ -36,11 +34,6 @@ def run_inference_local(
     # Load the model
     generator = pipeline("text-generation", model=model_name, device=device)
 
-    messages = [
-        {"role": "system", "content": template},
-        {"role": "user", "content": query},
-    ]
-
     # Get response
     response = generator(
         messages,
@@ -51,13 +44,11 @@ def run_inference_local(
 
     return response[0]["generated_text"]
 
-
 def run_inference_api(
     url: str,
     api_key: str,
     model_name: str,
-    query: str,
-    template: str = "",
+    messages: list[dict],
     max_new_tokens: int = 200,
     temperature: float = 0.0,
 ) -> str:
@@ -68,8 +59,7 @@ def run_inference_api(
     url (str): The OpenAI API endpoint URL
     api_key (str): Your OpenAI API key
     model_name (str): Name of the model to use
-    template (str): System prompt
-    query (str): Input text for the model
+    messages (list[dict]): List of messages to send to the model
     max_new_tokens (int):  Maximum length of the generated text (default: 100)
     temperature (float): Creativity of LLM from 0.0-1.0. Higher is less accurate.
 
@@ -81,11 +71,6 @@ def run_inference_api(
         base_url=url,
         api_key=api_key,
     )
-
-    messages = [
-        {"role": "system", "content": template},
-        {"role": "user", "content": query},
-    ]
 
     completion = client.chat.completions.create(
         model=model_name,

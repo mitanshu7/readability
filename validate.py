@@ -36,7 +36,7 @@ def predict_class(text: str) -> str:
 
 
 # Function to check whether the generated text belongs to the same level
-def validate_class(text: str, level: str) -> bool:
+def validate_level(text: str, level: str) -> bool:
     # Predict the class
     prediction = predict_class(text)
 
