@@ -4,12 +4,12 @@ Train Models to classify reading level of a text
 
 from pickle import dump  # Save models
 
+import numpy as np  # For array manipulation
 import pandas as pd  # For data manipulation
 from sklearn.model_selection import (
     train_test_split,  # Split data into train and test sets
 )
 from sklearn.svm import SVC  # Classification model
-import numpy as np # For array manipulation
 
 df = pd.read_parquet("datasets/OneStopEnglish/OneStopEnglish.parquet")
 
@@ -101,7 +101,7 @@ df = df_embed.drop(["paragraph", "paragraph_embedding"], axis=1)
 print("Extending embedding vector...")
 df["text_vector_readability"] = df.apply(
     lambda row: np.concatenate((row["text_embedding"], row["text_readability_scores"])),
-    axis=1
+    axis=1,
 )
 
 # Split the data into training and testing sets
@@ -122,3 +122,56 @@ print(f"Text Vector Readability SVM Accuracy: {text_vector_readability_svm_accur
 # Save the svm models using pickle
 with open("models/OneStopEnglish/text_vector_readability_svm_model.pkl", "wb") as f:
     dump(text_vector_readability_svm, f)
+
+################################################################################
+
+# Train SVM for full text
+text_svm_linear = SVC(kernel="linear")
+text_svm_linear.fit(train_df["text_embedding"].tolist(), train_df["level"])
+
+# Find accuracy
+text_svm_linear_accuracy = text_svm_linear.score(
+    test_df["text_embedding"].tolist(), test_df["level"]
+)
+print(f"Text SVM Linear Accuracy: {text_svm_linear_accuracy}")
+
+# Save the text svm model using pickle
+with open("models/OneStopEnglish/text_svm_linear_model.pkl", "wb") as f:
+    dump(text_svm_linear, f)
+
+################################################################################
+
+df = pd.read_parquet("datasets/OneStopEnglish/OneStopEnglish_umap.parquet")
+
+# Split data into train and test sets
+train_df, test_df = train_test_split(df, test_size=0.2, random_state=42)
+
+# Train SVM for full text
+text_svm_umap = SVC(kernel="linear")
+text_svm_umap.fit(train_df["text_embedding_umap"].tolist(), train_df["level"])
+
+# Find accuracy
+text_svm_umap_accuracy = text_svm_umap.score(
+    test_df["text_embedding_umap"].tolist(), test_df["level"]
+)
+print(f"Text SVM UMAP Accuracy: {text_svm_umap_accuracy}")
+
+# Save the text svm model using pickle
+with open("models/OneStopEnglish/text_svm_umap_model.pkl", "wb") as f:
+    dump(text_svm_umap, f)
+
+################################################################################
+
+# Train SVM for full text
+text_svm_linear_umap = SVC(kernel="linear")
+text_svm_linear_umap.fit(train_df["text_embedding_umap"].tolist(), train_df["level"])
+
+# Find accuracy
+text_svm_linear_umap_accuracy = text_svm_linear_umap.score(
+    test_df["text_embedding_umap"].tolist(), test_df["level"]
+)
+print(f"Text SVM Linear UMAP Accuracy: {text_svm_linear_umap_accuracy}")
+
+# Save the text svm model using pickle
+with open("models/OneStopEnglish/text_svm_linear_umap_model.pkl", "wb") as f:
+    dump(text_svm_linear_umap, f)
