@@ -2,9 +2,9 @@
 Generate answers with local and API models.
 """
 
-from transformers import pipeline
 import torch
 from openai import OpenAI
+from transformers import pipeline
 
 # TODO: ADD Logger
 
