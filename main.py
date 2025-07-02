@@ -139,4 +139,4 @@ with gr.Blocks() as demo:
     )
 
 # Launch the Gradio interface
-demo.launch()
+demo.launch(server_port=7895)
