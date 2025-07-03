@@ -26,7 +26,6 @@ def extract_level(filename: str) -> str:
 
 # Function to extract text from files
 def extract_text(filename: str) -> str:
-
     # Read the contents of the file
     with open(filename, "r") as f:
         text = f.read()
@@ -36,13 +35,14 @@ def extract_text(filename: str) -> str:
 
     return text
 
+
 # Extract title
 def extract_title(filename: str) -> str:
-    
     # Extract the title from the filename
     title = filename.split("/")[-1].split("-")[0]
 
     return title
+
 
 # Generate a pandas dataframe for classification
 df = pd.DataFrame({"filename": OneStopEnglish})
