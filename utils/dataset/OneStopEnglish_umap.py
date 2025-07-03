@@ -1,10 +1,10 @@
 import pandas as pd
 from umap import UMAP
 
-df = pd.read_parquet("datasets/OneStopEnglish/OneStopEnglish.parquet")
+df = pd.read_parquet("datasets/OneStopEnglish/OneStopEnglish_embed.parquet")
 
 # Initialize UMAP
-reducer = UMAP(metric="euclidean")
+reducer = UMAP(metric="cosine", n_components=512)
 
 # Fit and transform the data using UMAP
 df["text_embedding_umap"] = reducer.fit_transform(
