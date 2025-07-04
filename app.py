@@ -1,8 +1,15 @@
 import gradio as gr
 import pandas as pd
+from dotenv import dotenv_values
 
+# Configuration
+config = dotenv_values(".env")
+LLM_MODEL = config["LLM_MODEL"]
+
+# Read the dataset for demo
 df = pd.read_parquet("datasets/OneStopEnglish/meta-llama/Llama-3.2-3B-Instruct/OneStopEnglish.parquet")
 
+# Function to show a random sample
 def gen_sample():
     
     row = df.sample(1)
@@ -25,6 +32,7 @@ with gr.Blocks() as demo:
         gr.Markdown(
             "Uses the [OneStopEnglish](https://github.com/nishkalavallabhi/OneStopEnglishCorpus) dataset for classification and generation guidance."
         )
+        gr.Markdown(f"The LLM used for this demo is: **[{LLM_MODEL}](https://huggingface.co/{LLM_MODEL})**")
 
     # Generate Button
     with gr.Row():
