@@ -1,36 +1,39 @@
 import ast
+import os
 
-import gradio as gr
 import pandas as pd
 from dotenv import dotenv_values
 
 from generate import run_inference_api, run_inference_local
 from validate import feedback
+from tqdm import tqdm # Progress bar
+tqdm.pandas() # Progress bar for pandas
 
 # Configuration
 config = dotenv_values(".env")
 LOCAL = ast.literal_eval(config["LOCAL"])
-API_URL = config["OPENROUTER_API_URL"]
-API_KEY = config["OPENROUTER_API_KEY"]
+API_URL = config["API_URL"]
+API_KEY = config["API_KEY"]
 LLM_MODEL = config["LLM_MODEL"]
 
-# Read the trip_words dataset
-df = pd.read_parquet("datasets/OneStopEnglish/OneStopEnglish_trip_words.parquet")
 
 
 # Function to generate new text of the same level, but contains trip words
 def main(row: pd.DataFrame, history: list[dict] = None, counter: int = 0) -> str:
     # Counter to not exceed recursion limit
     counter += 1
-
-    if counter > 5:
-        raise RecursionError("Recursion limit exceeded")
     print(f"Counter: {counter}")
+    
+    if counter > 5:
+        print("!!!!!!!!!!!!! Recursion limit exceeded !!!!!!!!!!!!!")
+        print(row["filename"])
+        return None
+    
 
     # Extract information
-    original_text = row["text"].values[0]
-    level = row["level"].values[0]
-    trip_words = row["trip_words"].values[0]
+    original_text = row["text"]
+    level = row["level"]
+    trip_words = row["trip_words"]
 
     # Messages list of converstaion
     messages = []
@@ -100,55 +103,16 @@ def main(row: pd.DataFrame, history: list[dict] = None, counter: int = 0) -> str
         return main(row, messages, counter)
 
 
-# Function to get a random row from the dataset
-def get_random_row():
-    return df.sample(1)
+# Read the trip_words dataset
+df = pd.read_parquet("datasets/OneStopEnglish/OneStopEnglish_trip_words.parquet")
 
+# Put a cap due to time constraint
+df = df.sample(5)
 
-# Wrapper to work with Gradio (returns raw and generated info)
-def interface_fn():
-    row = get_random_row()
-    text = row["text"].values[0]
-    level = row["level"].values[0]
-    trip_words = row["trip_words"].values[0]
-    generated = main(row)
-    return text, level, trip_words, generated
+# Create rewritten dataset
+df["rewritten_text"] = df.progress_apply(main, axis=1)
 
-
-# Gradio Interface
-with gr.Blocks() as demo:
-    # Title and subtitle
-    gr.Markdown("# Text Generator")
-    gr.Markdown("## Keeps the readability of the original text. Preserves Trip words.")
-    gr.Markdown(
-        "Uses the [OneStopEnglish](https://github.com/nishkalavallabhi/OneStopEnglishCorpus) dataset for classification and generation guidance."
-    )
-
-    # Show generate now button
-    with gr.Row():
-        generate_btn = gr.Button("🔁 Generate Random Sample")
-
-    # Show Original text
-    with gr.Row():
-        text_output = gr.Textbox(label="Original Text", lines=6)
-
-    # Show readability level and trip words
-    with gr.Row():
-        level_output = gr.Textbox(
-            label="Reading Level (Adv = Advanced, Int = Intermediate, and Ele = Elementary.)"
-        )
-        trip_words_output = gr.Textbox(label="Trip Words")
-
-    # Show generated text
-    with gr.Row():
-        generated_output = gr.Textbox(label="Generated Text", lines=6)
-
-    # Define click event for generate button
-    generate_btn.click(
-        interface_fn,
-        inputs=[],
-        outputs=[text_output, level_output, trip_words_output, generated_output],
-    )
-
-# Launch the Gradio interface
-demo.launch(server_port=7895)
+# Save the dataset
+folder_name = f"datasets/OneStopEnglish/{LLM_MODEL}"
+os.makedirs(folder_name, exist_ok=True)
+df.to_parquet(f"{folder_name}/OneStopEnglish.parquet")
