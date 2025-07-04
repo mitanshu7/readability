@@ -23,7 +23,7 @@ embed_svm.fit(train_df["text_embedding"].tolist(), train_df["level"])
 text_svm_accuracy = embed_svm.score(
     test_df["text_embedding"].tolist(), test_df["level"]
 )
-print(f"Text SVM Accuracy with RBF Kernel: {text_svm_accuracy}")
+print(f"Text SVM Accuracy with RBF Kernel: {text_svm_accuracy:.3f}")
 
 # Save the text svm model using pickle
 with open("models/OneStopEnglish/OneStopEnglish_embed_SVM_rbf.pkl", "wb") as f:
@@ -39,7 +39,7 @@ embed_svm.fit(train_df["text_embedding"].tolist(), train_df["level"])
 text_svm_accuracy = embed_svm.score(
     test_df["text_embedding"].tolist(), test_df["level"]
 )
-print(f"Text SVM Accuracy with Linear Kernel: {text_svm_accuracy}")
+print(f"Text SVM Accuracy with Linear Kernel: {text_svm_accuracy:.3f}")
 
 # Save the text svm model using pickle
 with open("models/OneStopEnglish/OneStopEnglish_embed_SVM_linear.pkl", "wb") as f:
@@ -54,7 +54,7 @@ embed_svm.fit(train_df["text_embedding"].tolist(), train_df["level"])
 text_svm_accuracy = embed_svm.score(
     test_df["text_embedding"].tolist(), test_df["level"]
 )
-print(f"Text SVM Accuracy with poly Kernel: {text_svm_accuracy}")
+print(f"Text SVM Accuracy with poly Kernel: {text_svm_accuracy:.3f}")
 
 # Save the text svm model using pickle
 with open("models/OneStopEnglish/OneStopEnglish_embed_SVM_poly.pkl", "wb") as f:
@@ -70,7 +70,7 @@ embed_svm.fit(train_df["text_embedding"].tolist(), train_df["level"])
 text_svm_accuracy = embed_svm.score(
     test_df["text_embedding"].tolist(), test_df["level"]
 )
-print(f"Text SVM Accuracy with sigmoid Kernel: {text_svm_accuracy}")
+print(f"Text SVM Accuracy with sigmoid Kernel: {text_svm_accuracy:.3f}")
 
 # Save the text svm model using pickle
 with open("models/OneStopEnglish/OneStopEnglish_embed_SVM_sigmoid.pkl", "wb") as f:
@@ -93,7 +93,7 @@ embed_svm.fit(train_df["text_embedding_mrl"].tolist(), train_df["level"])
 text_svm_accuracy = embed_svm.score(
     test_df["text_embedding_mrl"].tolist(), test_df["level"]
 )
-print(f"Text SVM Accuracy with Linear Kernel and Half Vectors: {text_svm_accuracy}")
+print(f"Text SVM Accuracy with Linear Kernel and Half Vectors: {text_svm_accuracy:.3f}")
 
 # Save the text svm model using pickle
 with open("models/OneStopEnglish/OneStopEnglish_embed_SVM_linear_half.pkl", "wb") as f:
@@ -115,7 +115,7 @@ embed_svm.fit(train_df_umap["text_embedding_umap"].tolist(), train_df_umap["leve
 text_svm_accuracy = embed_svm.score(
     test_df_umap["text_embedding_umap"].tolist(), test_df_umap["level"]
 )
-print(f"Text SVM Accuracy with Linear Kernel and UMAP: {text_svm_accuracy}")
+print(f"Text SVM Accuracy with Linear Kernel and UMAP: {text_svm_accuracy:.3f}")
 
 # Save the text svm model using pickle
 with open("models/OneStopEnglish/OneStopEnglish_embed_SVM_linear_umap.pkl", "wb") as f:
