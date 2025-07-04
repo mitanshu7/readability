@@ -16,8 +16,9 @@ df = pd.read_parquet("datasets/OneStopEnglish/OneStopEnglish_readability.parquet
 train_df, test_df = train_test_split(df, test_size=0.2, random_state=42)
 
 # Extract the features
-train_features = train_df[["flesch_reading_ease", "flesch_kincaid_grade", "smog_index", "automated_readability_index", "coleman_liau_index", "dale_chall_readability_score", "linsear_write_formula", "gunning_fog"]]
-test_features = test_df[["flesch_reading_ease", "flesch_kincaid_grade", "smog_index", "automated_readability_index", "coleman_liau_index", "dale_chall_readability_score", "linsear_write_formula", "gunning_fog"]]
+readability_scores_list = ["flesch_reading_ease", "flesch_kincaid_grade", "smog_index", "automated_readability_index", "coleman_liau_index", "dale_chall_readability_score", "linsear_write_formula", "gunning_fog"]
+train_features = train_df[readability_scores_list]
+test_features = test_df[readability_scores_list]
 
 # Extract the labels
 train_labels = train_df["level"]
