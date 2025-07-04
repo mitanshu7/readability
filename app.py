@@ -35,7 +35,7 @@ with gr.Blocks() as demo:
             "Uses the [OneStopEnglish](https://github.com/nishkalavallabhi/OneStopEnglishCorpus) dataset for classification and generation guidance."
         )
         gr.Markdown(
-            f"The LLM used for this demo is: **[{LLM_MODEL}](https://huggingface.co/{LLM_MODEL})**"
+            f"The LLM used for this demo is: **[{LLM_MODEL}](https://openrouter.ai/{LLM_MODEL})**"
         )
 
     # Generate Button
