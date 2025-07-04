@@ -38,17 +38,29 @@ def main(row: pd.DataFrame, history: list[dict] = None, counter: int = 0) -> str
     # Append task information if history in None
     if history is None:
         # Setup system prompt
-        system_prompt = """You are tasked to generate text that has similar content to the one provided below,
-            is of the same readability level and must contain all the words from the trip words list.
-            Only return the modified text and nothing else."""
+        system_prompt = """
+        You are a text transformation assistant. Your goal is to generate a rewritten version of a given text. The new version must:
+
+        - Preserve the same general content and meaning as the original.
+        - Match the same readability level as specified.
+        - Include **all** words from the provided Trip Words list (in any contextually appropriate way).
+        - Output **only** the rewritten text, with no extra explanations or commentary.
+        """
 
         # Append system prompt to messages
         messages.append({"role": "system", "content": system_prompt})
 
         # Setup task prompt
-        task_prompt = (
-            f"Original Text: {original_text}\nLevel: {level}\nTrip Words: {trip_words}"
-        )
+        task_prompt = f"""
+        Original Text:
+        \"\"\"{original_text}\"\"\"
+
+        Readability Level: {level}
+
+        Trip Words: {", ".join(trip_words)}
+
+        Please rewrite the text accordingly.
+        """
 
         # Append and task prompt to messages
         messages.append({"role": "user", "content": task_prompt})
