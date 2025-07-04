@@ -3,14 +3,13 @@ Validate generated text for readability
 """
 
 # Verify the required level of text here
-# send appropriate prompts back in case the levels mis match
-#
+
 from pickle import load
 
 import nltk
+import textstat
 from nltk.tokenize import word_tokenize
 from sentence_transformers import SentenceTransformer
-import textstat
 
 # Download the punkt tokenizer model
 nltk.download("punkt_tab")
@@ -22,6 +21,7 @@ with open(svm_model_name, "rb") as file:
 
 # Load the embedding models
 embedding_model = SentenceTransformer("mixedbread-ai/mxbai-embed-large-v1")
+
 
 # Function to create readability scores on the text
 # Function to create readability scores on the text
@@ -40,15 +40,15 @@ def create_readability_scores(text: str) -> list[float]:
 
     return list(scores.values())
 
+
 # Function to predict the class of input text
 def predict_class(text: str) -> str:
-    
     # Embed the text
     text_embedding = embedding_model.encode(text, convert_to_numpy=True)
-    
+
     # Readability scores
     readability_scores = create_readability_scores(text)
-    
+
     # Classifier input
     input_features = list(text_embedding) + readability_scores
 
@@ -70,17 +70,16 @@ def validate_level(text: str, level: str) -> bool:
 
 # Function to check where the generated text has the required trip words
 def validate_trip_words(text: str, trip_words: list) -> bool:
-    
     # Tokenize the text
     words = word_tokenize(text)
-    
+
     # Make all text lower case and make the list unique
     words = [word.lower() for word in words]
     words = list(set(words))
-    
+
     # Make all trip words lower case
     trip_words = [trip_word.lower() for trip_word in trip_words]
-    
+
     return all(word in words for word in trip_words)
 
 
@@ -94,18 +93,16 @@ def feedback(text: str, level: str, trip_words: list) -> str:
         return f"""The generated text does not match the required readability level.
     Detected Level: {prediction}
     Expected Level: {level}
-    
-    Please revise the text to match the expected level while preserving the original meaning and including all required Trip Words."""
 
+    Please revise the text to match the expected level while preserving the original meaning and including all required Trip Words."""
 
     # Check if the text has the required trip words
     if not validate_trip_words(text, trip_words):
         return f"""The generated text is missing one or more required Trip Words.
-    
-    Required Trip Words: {', '.join(trip_words)}
-    
-    Please regenerate the text to ensure all Trip Words are naturally and appropriately included, while maintaining the intended readability level and original meaning."""
 
+    Required Trip Words: {", ".join(trip_words)}
+
+    Please regenerate the text to ensure all Trip Words are naturally and appropriately included, while maintaining the intended readability level and original meaning."""
 
     # If the text passes both checks, return a positive feedback message
     return "pass"

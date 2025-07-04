@@ -44,6 +44,7 @@ def run_inference_local(
 
     return response[0]["generated_text"]
 
+
 def run_inference_api(
     url: str,
     api_key: str,

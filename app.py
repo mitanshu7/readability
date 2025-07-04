@@ -7,32 +7,36 @@ config = dotenv_values(".env")
 LLM_MODEL = config["LLM_MODEL"]
 
 # Read the dataset for demo
-df = pd.read_parquet("datasets/OneStopEnglish/meta-llama/Llama-3.2-3B-Instruct/OneStopEnglish.parquet")
+df = pd.read_parquet(
+    "datasets/OneStopEnglish/meta-llama/Llama-3.2-3B-Instruct/OneStopEnglish.parquet"
+)
+
 
 # Function to show a random sample
 def gen_sample():
-    
     row = df.sample(1)
-    
+
     text_output = row["text"].values[0]
     level_output = row["level"].values[0]
     trip_words_output = row["trip_words"].values[0]
     generated_output = row["rewritten_text"].values[0]
-    
+
     return text_output, level_output, trip_words_output, generated_output
-    
+
 
 # Gradio Interface
 with gr.Blocks() as demo:
     # Header
     gr.Markdown("# 📝 Text Generator")
     gr.Markdown("### Keeps the readability of the original text. Preserves Trip words.")
-    
+
     with gr.Accordion("ℹ️ Dataset Info", open=False):
         gr.Markdown(
             "Uses the [OneStopEnglish](https://github.com/nishkalavallabhi/OneStopEnglishCorpus) dataset for classification and generation guidance."
         )
-        gr.Markdown(f"The LLM used for this demo is: **[{LLM_MODEL}](https://huggingface.co/{LLM_MODEL})**")
+        gr.Markdown(
+            f"The LLM used for this demo is: **[{LLM_MODEL}](https://huggingface.co/{LLM_MODEL})**"
+        )
 
     # Generate Button
     with gr.Row():

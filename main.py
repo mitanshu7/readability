@@ -3,11 +3,12 @@ import os
 
 import pandas as pd
 from dotenv import dotenv_values
+from tqdm import tqdm  # Progress bar
 
 from generate import run_inference_api, run_inference_local
 from validate import feedback
-from tqdm import tqdm # Progress bar
-tqdm.pandas() # Progress bar for pandas
+
+tqdm.pandas()  # Progress bar for pandas
 
 # Configuration
 config = dotenv_values(".env")
@@ -17,18 +18,16 @@ API_KEY = config["API_KEY"]
 LLM_MODEL = config["LLM_MODEL"]
 
 
-
 # Function to generate new text of the same level, but contains trip words
 def main(row: pd.DataFrame, history: list[dict] = None, counter: int = 0) -> str:
     # Counter to not exceed recursion limit
     counter += 1
     print(f"Counter: {counter}")
-    
+
     if counter > 5:
         print("!!!!!!!!!!!!! Recursion limit exceeded !!!!!!!!!!!!!")
         print(row["filename"])
         return None
-    
 
     # Extract information
     original_text = row["text"]

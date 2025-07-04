@@ -1,12 +1,11 @@
 from pickle import dump  # Save models
 
-import numpy as np  # For array manipulation
 import pandas as pd  # For data manipulation
 from sklearn.model_selection import (
     train_test_split,  # Split data into train and test sets
 )
+from sklearn.preprocessing import StandardScaler  # For feature scaling
 from sklearn.svm import SVC  # Classification model
-from sklearn.preprocessing import StandardScaler # For feature scaling
 
 ################################################################################
 
@@ -16,7 +15,16 @@ df = pd.read_parquet("datasets/OneStopEnglish/OneStopEnglish_readability.parquet
 train_df, test_df = train_test_split(df, test_size=0.2, random_state=42)
 
 # Extract the features
-readability_scores_list = ["flesch_reading_ease", "flesch_kincaid_grade", "smog_index", "automated_readability_index", "coleman_liau_index", "dale_chall_readability_score", "linsear_write_formula", "gunning_fog"]
+readability_scores_list = [
+    "flesch_reading_ease",
+    "flesch_kincaid_grade",
+    "smog_index",
+    "automated_readability_index",
+    "coleman_liau_index",
+    "dale_chall_readability_score",
+    "linsear_write_formula",
+    "gunning_fog",
+]
 train_features = train_df[readability_scores_list]
 test_features = test_df[readability_scores_list]
 
@@ -35,7 +43,9 @@ accuracy = model.score(test_features, test_labels)
 print(f"Linear Kernel: {accuracy:.3f}")
 
 # Save the model
-dump(model, open("models/OneStopEnglish/OneStopEnglish_readability_SVM_linear.pkl", "wb"))
+dump(
+    model, open("models/OneStopEnglish/OneStopEnglish_readability_SVM_linear.pkl", "wb")
+)
 
 ################################################################################
 
@@ -74,7 +84,10 @@ accuracy = model.score(test_features, test_labels)
 print(f"Sigmoid Kernel: {accuracy:.3f}")
 
 # Save the model
-dump(model, open("models/OneStopEnglish/OneStopEnglish_readability_SVM_sigmoid.pkl", "wb"))
+dump(
+    model,
+    open("models/OneStopEnglish/OneStopEnglish_readability_SVM_sigmoid.pkl", "wb"),
+)
 
 ################################################################################
 
@@ -94,7 +107,12 @@ accuracy = model.score(test_features_scaled, test_labels)
 print(f"Linear Kernel, Scaled: {accuracy:.3f}")
 
 # Save the model
-dump(model, open("models/OneStopEnglish/OneStopEnglish_readability_SVM_linear_scaled.pkl", "wb"))
+dump(
+    model,
+    open(
+        "models/OneStopEnglish/OneStopEnglish_readability_SVM_linear_scaled.pkl", "wb"
+    ),
+)
 
 ################################################################################
 
@@ -107,7 +125,10 @@ accuracy = model.score(test_features_scaled, test_labels)
 print(f"RBF Kernel, Scaled: {accuracy:.3f}")
 
 # Save the model
-dump(model, open("models/OneStopEnglish/OneStopEnglish_readability_SVM_rbf_scaled.pkl", "wb"))
+dump(
+    model,
+    open("models/OneStopEnglish/OneStopEnglish_readability_SVM_rbf_scaled.pkl", "wb"),
+)
 
 ################################################################################
 
@@ -120,7 +141,10 @@ accuracy = model.score(test_features_scaled, test_labels)
 print(f"Polynomial Kernel, Scaled: {accuracy:.3f}")
 
 # Save the model
-dump(model, open("models/OneStopEnglish/OneStopEnglish_readability_SVM_poly_scaled.pkl", "wb"))
+dump(
+    model,
+    open("models/OneStopEnglish/OneStopEnglish_readability_SVM_poly_scaled.pkl", "wb"),
+)
 
 ################################################################################
 
@@ -133,4 +157,9 @@ accuracy = model.score(test_features_scaled, test_labels)
 print(f"Sigmoid Kernel, Scaled: {accuracy:.3f}")
 
 # Save the model
-dump(model, open("models/OneStopEnglish/OneStopEnglish_readability_SVM_sigmoid_scaled.pkl", "wb"))
+dump(
+    model,
+    open(
+        "models/OneStopEnglish/OneStopEnglish_readability_SVM_sigmoid_scaled.pkl", "wb"
+    ),
+)
