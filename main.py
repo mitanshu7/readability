@@ -107,7 +107,7 @@ def main(row: pd.DataFrame, history: list[dict] = None, counter: int = 0) -> str
 df = pd.read_parquet("datasets/OneStopEnglish/OneStopEnglish_trip_words.parquet")
 
 # Put a cap due to time constraint
-df = df.sample(5)
+df = df.sample(25)
 
 # Create rewritten dataset
 df["rewritten_text"] = df.progress_apply(main, axis=1)
