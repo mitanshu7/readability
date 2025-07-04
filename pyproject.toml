@@ -13,7 +13,6 @@ dependencies = [
     "openai>=1.93.0",
     "pandas>=2.3.0",
     "pyarrow>=20.0.0",
-    "pyqt6>=6.9.1",
     "python-dotenv>=1.1.1",
     "scikit-learn>=1.7.0",
     "sentence-transformers>=4.1.0",

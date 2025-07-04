@@ -16,10 +16,10 @@ df = pd.read_parquet(
 def gen_sample():
     row = df.sample(1)
 
-    text_output = row["text"].values[0]
-    level_output = row["level"].values[0]
-    trip_words_output = row["trip_words"].values[0]
-    generated_output = row["rewritten_text"].values[0]
+    text_output =str(row["text"].values[0])
+    level_output = str(row["level"].values[0])
+    trip_words_output = str(row["trip_words"].values[0])
+    generated_output = str(row["rewritten_text"].values[0])
 
     return text_output, level_output, trip_words_output, generated_output
 
@@ -45,12 +45,18 @@ with gr.Blocks() as demo:
     # Text Display Area
     with gr.Row():
         with gr.Column():
-            text_output = gr.Textbox(label="📄 Original Text", lines=6)
-            level_output = gr.Textbox(label="📊 Reading Level")
-            trip_words_output = gr.Textbox(label="🧩 Trip Words")
+            gr.Markdown("#### 📄 Original Text")
+            text_output = gr.Markdown("*(Original text will appear here)*")
+
+            gr.Markdown("#### 📊 Reading Level")
+            level_output = gr.Markdown("*(Reading level will appear here)*")
+
+            gr.Markdown("#### 🧩 Trip Words")
+            trip_words_output = gr.Markdown("*(Trip words will appear here)*")
 
         with gr.Column():
-            generated_output = gr.Textbox(label="✨ Generated Text", lines=10)
+            gr.Markdown("#### ✨ Generated Text")
+            generated_output = gr.Markdown("*(Generated text will appear here)*")
 
     # Optional spacing or footer
     gr.Markdown("—")
