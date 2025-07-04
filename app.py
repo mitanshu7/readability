@@ -8,7 +8,7 @@ LLM_MODEL = config["LLM_MODEL"]
 
 # Read the dataset for demo
 df = pd.read_parquet(
-    "datasets/OneStopEnglish/meta-llama/Llama-3.2-3B-Instruct/OneStopEnglish.parquet"
+    f"datasets/OneStopEnglish/{LLM_MODEL}/OneStopEnglish.parquet"
 )
 
 
