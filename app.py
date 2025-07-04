@@ -58,9 +58,6 @@ with gr.Blocks() as demo:
             gr.Markdown("#### ✨ Generated Text")
             generated_output = gr.Markdown("*(Generated text will appear here)*")
 
-    # Optional spacing or footer
-    gr.Markdown("—")
-
     # Define click event for generate button
     generate_btn.click(
         gen_sample,
